@@ -1,4 +1,4 @@
-[[Hebblewhite2007YaHaElkMigration.pdf]]
+[[content/attachments/Hebblewhite2007YaHaElkMigration.pdf]]
 NOTES:
 - Initial area of interest is the May-June and September-December migration and move back.
   - Secondary focus would be 25-50km range of migration.
