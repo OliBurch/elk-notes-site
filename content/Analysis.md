@@ -13,5 +13,5 @@
 - We can start to test the GPS fixes by running a small script to check maximum displacement against summer distance and print the worst six of these. This script can be found at [[Code Appendix]] underneath the original script.
 - We can then add a one liner to the original code (in: [[Code Appendix]]) to print out the movement data for the elk instead of cleaning it.
 - Finally, we use the results from both to plot the trajectories of the six elk and can tell what the issue is with relative simplicity. The code is again in the [[Code Appendix]] while the plots can be found at [[suspect_tracks.png]]. 
-- Our results clearly show that five of the six elk had a poor GPS fix while one of the elk migrated in June, one month early of the summer range we defined.
+- Our results clearly show that five of the six elk had a poor GPS fix while one of the elk migrated in June, one month earlier than that of the summer range we defined.
 
