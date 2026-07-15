@@ -1,3 +1,4 @@
+##### 1. Main Plots and Data Extraction":
 ```python
 """
 Anchors each elk to its winter range: the median position it occupies
@@ -170,4 +171,66 @@ def main():
 
 if __name__ == "__main__" and len(sys.argv) > 1:
     main()
+```
+##### 2. Finding Offenders of [[Movement Graphs.png]] and Plotting Trajectories:
+```python
+'''
+Extracts the data of the elk with the largest maximum distance to summer displacement ratio.
+'''
+import pandas as pd
+
+df = pd.read_csv("elk_year_features_v2.csv")
+
+# how far the year-wide maximum sits above the summer figure
+df["excursion_gap_km"] = df["max_disp_km"] - df["summer_disp_km"]
+
+# suspects: small summer distance, but a big maximum somewhere in the year
+suspects = df.sort_values("excursion_gap_km", ascending=False)
+print(
+    suspects[["id", "year", "summer_disp_km", "max_disp_km", "excursion_gap_km"]]
+    .head(8)
+    .to_string(index=False)
+)
+```
+
+```python
+'''
+Plots the trajectories of the elk chosen in the previous step.
+'''
+import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+out = pd.read_pickle("tracks_full.pkl")
+
+# the five low-summer, high-max suspects from the spot-check
+targets = [("OR41", 2013), ("YL30", 2006), ("OR99", 2014),
+           ("OR66_BL293", 2017), ("OR100", 2016)]
+
+fig, axes = plt.subplots(2, 3, figsize=(15, 8))
+axes = axes.ravel()
+
+for ax, (eid, yr) in zip(axes, targets):
+    row = out[(out["id"] == eid) & (out["year"] == yr)]
+    if row.empty:
+        ax.set_title(f"{eid} {yr}: not found")
+        ax.axis("off")
+        continue
+    r = row.iloc[0]
+    doy = np.asarray(r["_doy"])
+    disp = np.asarray(r["_disp"])
+    ax.plot(doy, disp, lw=0.8, color="grey", zorder=1)        # the track
+    ax.scatter(doy, disp, s=12, color="darkgreen", zorder=2)  # each GPS fix
+    ax.set(xlabel="days since 1 June",
+           ylabel="distance from winter range (km)",
+           title=f"{eid}  ({yr})")
+
+axes[-1].axis("off")   # hide the empty sixth panel
+
+fig.suptitle("suspect tracks: real excursion or bad fix?", y=1.02)
+fig.tight_layout()
+fig.savefig("suspect_tracks.png", dpi=140, bbox_inches="tight")
+print("saved suspect_tracks.png")
 ```
