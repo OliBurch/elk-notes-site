@@ -1,6 +1,6 @@
 ## Week 2: Is the AI reading the data or is it using "muscle memory"
 ##### 1. Counting Data:
-- From the 175 elk, there are a total 1,585,486 entries ([[2001-2020 - Notes and Ideas]]). Of these elk, only 113 are relevant to the study due to the necessity of covering the winter and summer ranges of the data. Therefore, there are a total 234 elk years (an elk that is only tracked for 90 days of a year for example would still be considered as contributing 1 elk year) in the study.
+- From the 175 elk, there are a total 1,585,456 entries ([[2001-2020 - Notes and Ideas]]). Of these elk, only 113 are relevant to the study due to the necessity of covering the winter and summer ranges of the data. Therefore, there are a total 234 elk years (an elk that is only tracked for 90 days of a year for example would still be considered as contributing 1 elk year) in the study.
 - The choice of only elk whose collars lasted the full ranges could inflate the resident majority in the data if the migrants were more likely to not last this full range. It is not likely that this will vary the result though as the test is to simply see if the AI is reading the data, not to produce a complete theory of elk migration.
 ##### 2. Foundations from the Data:
 - We then need a baseline from the data. This weeks attempt is to prove that the AI can spot 'trends' in the data without just regurgitating what it already knows. First, we apply the 'human' element of the study by seeing what we can infer from the data. This will provide a useful baseline to the AI's response (see [[Workflow Notes]]). To do this, we can plot the data into 3 useful graphs each giving some concept of what story the data is telling. The code for these graphs can be found in [[Code Appendix]]. 
@@ -27,4 +27,29 @@
   - Criterion 3: Does the AI interpret the groups? Can it see that the low groups are resident while the high groups travel further from the winter range.
   - Criterion 4 : Does the AI point to its sources? Does is infer from the data or does it simply assert results generically without claim.
   - Criterion 5: Does the AI use the relationship between summer and maximum displacement. Does it treat the maximums with the appropriate caution rather than simply listing them as long journeys.
-  - Criterion 6: Does the AI explicitly list structure the data can support? Does it list where speculation lies separate to concrete answers. 
+  - Criterion 6: Does the AI explicitly list structure the data can support? Does it note where speculation lies separate to concrete evidence. 
+##### 5. Scoring:
+- Four LLMs will be tested for each tier in this stage of the project. We will be using Gemini 2.5 Flash, Gemini 3.1 Pro, Claude Sonnet 5 and Claude Opus 4.8. This ensures we cross-reference between strength of model and between companies (namely Google and Anthropic).
+- To clean the data to ensure that the blind version was truly blind we swept the columns of the original data and changed each label to feature 'x' where x is a number between 1 and 6. This can be found in the [[Code Appendix]].
+
+| Model            | Tier        | C1  | C2  | C3  | C4  | C5  | C6  | Total /12 |
+| ---------------- | ----------- | --- | --- | --- | --- | --- | --- | --------- |
+| Gemini 2.5 Flash | Blind       |     |     |     |     |     |     |           |
+| Gemini 2.5 Flash | Informed    |     |     |     |     |     |     |           |
+| Gemini 2.5 Flash | False-label |     |     |     |     |     |     |           |
+| Gemini 3.1 Pro   | Blind       |     |     |     |     |     |     |           |
+| Gemini 3.1 Pro   | Informed    |     |     |     |     |     |     |           |
+| Gemini 3.1 Pro   | False-label |     |     |     |     |     |     |           |
+| Claude Sonnet 5  | Blind       |     |     |     |     |     |     |           |
+| Claude Sonnet 5  | Informed    |     |     |     |     |     |     |           |
+| Claude Sonnet 5  | False-label |     |     |     |     |     |     |           |
+| Claude Opus 4.8  | Blind       |     |     |     |     |     |     |           |
+| Claude Opus 4.8  | Informed    |     |     |     |     |     |     |           |
+| Claude Opus 4.8  | False-label |     |     |     |     |     |     |           |
+
+|Model|Blind (T1)|Informed (T2)|Δ (T2 − T1)|False-label (T3)|Notes|
+|---|---|---|---|---|---|
+|Gemini 2.5 Flash||||||
+|Gemini 3.1 Pro||||||
+|Claude Sonnet 5||||||
+|Claude Opus 4.8||

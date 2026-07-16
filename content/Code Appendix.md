@@ -234,3 +234,32 @@ fig.tight_layout()
 fig.savefig("suspect_tracks.png", dpi=140, bbox_inches="tight")
 print("saved suspect_tracks.png")
 ```
+##### 3. Cleaning the data:
+```python
+import pandas as pd
+import json
+
+# read the named table the pipeline already saved
+tab = pd.read_csv("elk_year_features_v2.csv")
+
+# strip every semantic cue from the names, keep values identical
+neutral = {
+    "n_fixes":          "feature_1",
+    "summer_disp_km":   "feature_2",
+    "max_disp_km":      "feature_3",
+    "winter_spread_km": "feature_4",
+    "days_away":        "feature_5",
+    "path_km":          "feature_6",
+}
+ids = {v: f"unit_{i:03d}" for i, v in enumerate(sorted(tab["id"].unique()))}
+b = tab.copy()
+b["id"] = b["id"].map(ids)
+b["year"] = b["year"] - b["year"].min() + 1
+b = b.rename(columns={"id": "unit", "year": "period", **neutral})
+b.to_csv("blinded_features_v2.csv", index=False)
+
+json.dump({"map": neutral, "note": "feature_2 is summer displacement; gap expected ~10-13"},
+          open("blind_key.json", "w"), indent=2)   # your eyes only — never shown to a model
+
+print(f"wrote blinded_features_v2.csv ({len(b)} rows) and blind_key.json")
+```
