@@ -14,4 +14,17 @@
 - We can then add a one liner to the original code (in: [[Code Appendix]]) to print out the movement data for the elk instead of cleaning it.
 - Finally, we use the results from both to plot the trajectories of the six elk and can tell what the issue is with relative simplicity. The code is again in the [[Code Appendix]] while the plots can be found at [[suspect_tracks.png]]. 
 - Our results clearly show that five of the six elk had a poor GPS fix while one of the elk migrated in June, one month earlier than that of the summer range we defined.
-
+##### 3. Prompting Tiers:
+- This section focuses on the motif of this section - given blind data can the AI replicate the result we found from sections 1 and 2. It will test this be creating three tiers of prompt.
+- Tier 1: Blind data. Can the AI recover this structure of a 'gap' from the numerical data alone. Titles will be stripped and the AI will be fed no driving motivation. 
+- Tier 2: Informed data. Does providing information about the species, location and migration itself improve the result. This will depend on whether the information is actually being read by the AI or if it is simply using the data to search its own memory for results about the system.
+- Tier 3: False labelling. The AI will be fed the same information as tier 2 but with the incorrect labels. This will create a distinguishing factor between the AI using its own memory and actually using the information in front of it. If its answer is driven by patterns similar to the false labels then it is using its own memory.
+##### 4. Rubric:
+- The test will follow as listed: Firstly, a rubric of six criterion is established. Next, each response from each LLM is given a score of zero to two for each criterion (i.e max score of twelve for any LLM). Finally, the numerical calculation $$ \Delta_{informed} = S_{Tier 2} - S_{Tier 1}$$ is performed to create a headline number for how much 'muscle' memory the AI relies on versus the quality of the result. 
+- The first three criteria test the substance of each response. Could the LLM successfully identify the structure? The forth catches the muscle memory. Does the answer refer to the data at all? The fifth and sixth defend the answer. Does the AI respond in such a way that it appears it has invented some structure to the answer? Has it overstepped the data?
+  - Criterion 1: Does the AI state the non-continuum that we found in sections 1 and 2.
+  - Criterion 2: Does the AI identify the gap at 10-13km. Does it identify it correctly and not just as a variation.
+  - Criterion 3: Does the AI interpret the groups? Can it see that the low groups are resident while the high groups travel further from the winter range.
+  - Criterion 4 : Does the AI point to its sources? Does is infer from the data or does it simply assert results generically without claim.
+  - Criterion 5: Does the AI use the relationship between summer and maximum displacement. Does it treat the maximums with the appropriate caution rather than simply listing them as long journeys.
+  - Criterion 6: Does the AI explicitly list structure the data can support? Does it list where speculation lies separate to concrete answers. 
