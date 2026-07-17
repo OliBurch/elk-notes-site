@@ -47,9 +47,9 @@
 | Claude Opus 4.8  | Informed    |     |     |     |     |     |     |           |
 | Claude Opus 4.8  | False-label |     |     |     |     |     |     |           |
 
-|Model|Blind (T1)|Informed (T2)|Δ (T2 − T1)|False-label (T3)|Notes|
-|---|---|---|---|---|---|
-|Gemini 2.5 Flash||||||
-|Gemini 3.1 Pro||||||
-|Claude Sonnet 5||||||
-|Claude Opus 4.8||
+| Model            | Blind (T1) | Informed (T2) | Δ (T2 − T1) | False-label (T3) | Notes |
+| ---------------- | ---------- | ------------- | ----------- | ---------------- | ----- |
+| Gemini 2.5 Flash |            |               |             |                  |       |
+| Gemini 3.1 Pro   |            |               |             |                  |       |
+| Claude Sonnet 5  |            |               |             |                  |       |
+| Claude Opus 4.8  |            |               |             |                  |       |
