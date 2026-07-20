@@ -29,8 +29,9 @@
   - Criterion 5: Does the AI use the relationship between summer and maximum displacement. Does it treat the maximums with the appropriate caution rather than simply listing them as long journeys.
   - Criterion 6: Does the AI explicitly list structure the data can support? Does it note where speculation lies separate to concrete evidence. 
 ##### 5. Scoring:
-- Four LLMs will be tested for each tier in this stage of the project. We will be using Gemini 2.5 Flash, Gemini 3.1 Pro, Claude Sonnet 5 and Claude Opus 4.8. This ensures we cross-reference between strength of model and between companies (namely Google and Anthropic).
+- Four LLMs will be tested for each tier in this stage of the project. We will be using Gemini 2.5 Flash, Gemini 3.1 Pro, Claude Sonnet 5 and Claude Opus 4.8. This ensures we cross-reference between strength of model and between companies (namely Google and Anthropic). Worth noting that the total cost was $2.40 total for Claude models and £0.60 for Gemini models.
 - To clean the data to ensure that the blind version was truly blind we swept the columns of the original data and changed each label to feature 'x' where x is a number between 1 and 6. This can be found in the [[Code Appendix]].
+- The responses were also randomised to ensure that scoring avoided bias. The code for this is also in the [[Code Appendix]].
 
 | Model            | Tier        | C1  | C2  | C3  | C4  | C5  | C6  | Total /12 |
 | ---------------- | ----------- | --- | --- | --- | --- | --- | --- | --------- |
@@ -53,3 +54,15 @@
 | Gemini 3.1 Pro   |            |               |             |                  |       |
 | Claude Sonnet 5  |            |               |             |                  |       |
 | Claude Opus 4.8  |            |               |             |                  |       |
+##### 6. Current Limitations:
+- Claude does not allow sampling parameters to be set on the models chosen. Gemini uses default parameters for symmetry but this may not be the same as Claude's default.
+- Thinking is set on for all models as Gemini's Pro model does not have the option to turn it off. Thinking also differs between dynamic (Gemini) and adaptive (Claude). 
+- Claude models are routed via OpenRouter rather than Anthropic's API, because the Anthropic Console organisation was deleted and support could not restore access in time. The provider is pinned to Anthropic with fallbacks disabled and the resolved provider logged per run, so the requests are served on Anthropic infrastructure - but the billing and request path differ from Gemini, which uses the vendor API directly.
+- The Flash pilot ran on Google's free tier, where prompts and responses may be used to improve Google's products. Later runs on the paid tier generally are not. So data handling differs between pilot and final batches.
+- Three runs per model per tier is a small sample for a between-tier difference.
+- Scoring is done by the person designing the test. Adding a second person would strengthen the result.
+- The blind tier differs from the other two in more than framing - it also uses a different CSV, with neutralised column names, unit IDs, and relative periods. So blind versus informed confounds framing with column-name semantics.
+- The false-label tier depends on the assumption that a competent reader should find 40–60 km displacements implausible for roe deer. That assumption is well founded but is itself a premise of the design rather than something the data tests.
+- Model versions are moving targets. Gemini 3.1 Pro Preview is a preview identifier subject to renaming and behavioural change, so results are tied to the collection date rather than to a stable model.
+- Hit three distinct Gemini failure modes in one morning: permanent quota restriction, empty responses, and server overload. The first two come hand in hand while the last is an issue on Google's behalf. Simple fixes (max tokens from 16000->32000 and waited 15 minutes then tried again on Google's side) but limitations nonetheless.
+- In regard to billing, Opus blind runs ran more expensive than framed runs due to reasoning token billing.
