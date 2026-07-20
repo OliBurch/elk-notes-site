@@ -31,7 +31,8 @@
 ##### 5. Scoring:
 - Four LLMs will be tested for each tier in this stage of the project. We will be using Gemini 2.5 Flash, Gemini 3.1 Pro, Claude Sonnet 5 and Claude Opus 4.8. This ensures we cross-reference between strength of model and between companies (namely Google and Anthropic). Worth noting that the total cost was $2.40 total for Claude models and £0.60 for Gemini models.
 - To clean the data to ensure that the blind version was truly blind we swept the columns of the original data and changed each label to feature 'x' where x is a number between 1 and 6. This can be found in the [[Code Appendix]].
-- The responses were also randomised to ensure that scoring avoided bias. The code for this is also in the [[Code Appendix]].
+- The responses were also randomised to ensure that scoring avoided bias. The code for this is also in the [[Code Appendix]]. 
+- An initial analysis of the rubric assumptions can also be found in [[Rubric Notes]]. 
 
 | Model            | Tier        | C1  | C2  | C3  | C4  | C5  | C6  | Total /12 |
 | ---------------- | ----------- | --- | --- | --- | --- | --- | --- | --------- |
@@ -54,6 +55,7 @@
 | Gemini 3.1 Pro   |            |               |             |                  |       |
 | Claude Sonnet 5  |            |               |             |                  |       |
 | Claude Opus 4.8  |            |               |             |                  |       |
+
 ##### 6. Current Limitations:
 - Claude does not allow sampling parameters to be set on the models chosen. Gemini uses default parameters for symmetry but this may not be the same as Claude's default.
 - Thinking is set on for all models as Gemini's Pro model does not have the option to turn it off. Thinking also differs between dynamic (Gemini) and adaptive (Claude). 

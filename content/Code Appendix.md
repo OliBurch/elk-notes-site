@@ -679,3 +679,196 @@ if __name__ == "__main__":
                     help="print the assembled prompts and exit without calling any API")
     main(dry_run=ap.parse_args().dry_run)
 ```
+##### 5. Blinding the Data:
+```python
+"""
+prepare_scoring.py -- shuffles the collected responses into anonymised files so
+they can be scored without knowing which model produced them.
+
+    python3 prepare_scoring.py
+
+Outputs
+    to_score/          one .txt per response, resp_000.txt onward, in random
+                       order, containing only the response text
+    scoring_sheet.csv  blank scoring grid, one row per response
+    scoring_key.json   maps each response id to its model, tier and run
+    rubric_notes.md    the scoring rules, written before scoring began
+
+scoring_key.json must not be opened until every score is recorded.
+
+Completeness of the blinding
+Partial, and reported as such. Model identity is hidden, as is run number and
+collection order, which prevents drift through a model's three runs and stops
+all runs of one cell being scored consecutively. Tier, however, is usually
+inferable from the response text itself: an informed-tier answer generally
+names elk, a false-label answer roe deer. Removing that would mean altering the
+text being scored, so it is accepted and declared rather than concealed.
+
+The plausibility flag
+Recorded only for false-label responses: 1 if the response questions the
+mismatch between the stated species (roe deer, a small-ranged, sedentary
+animal) and the 40-60 km summer displacements present in the data; 0 if it
+does not. Blind and informed responses contain no equivalent implausibility, so
+the flag is left blank for them. It is kept outside the six criteria precisely
+because it exists in one tier only; scoring it within criterion 6 would make
+that tier structurally different and would contaminate the informed-minus-
+false-label comparison.
+"""
+
+import json
+import pathlib
+import random
+import csv
+
+SOURCE_DIRS = ["runs", "runs_gemini"]
+
+OUT_DIR     = pathlib.Path("to_score")
+KEY_FILE    = pathlib.Path("scoring_key.json")
+SHEET_FILE  = pathlib.Path("scoring_sheet.csv")
+RUBRIC_FILE = pathlib.Path("rubric_notes.md")
+
+# Fixed so the shuffle is reproducible.
+SEED = 20260720
+
+CRITERIA = [
+    "c1_detects_structure",
+    "c2_number_of_groups",
+    "c3_boundary_placement",
+    "c4_what_separates_groups",
+    "c5_flags_weak_evidence",
+    "c6_false_alarms",
+]
+
+COLUMNS = ["response_id", *CRITERIA, "plausibility_flag", "total", "notes"]
+
+RUBRIC_STARTER = """# Rubric notes
+
+Written before any response was read. Each criterion scores 0, 1 or 2;
+maximum 12. Where a judgement is made on "strength of the answer", the reason
+is recorded in the notes column of the scoring sheet.
+
+## 1. Detects structure at all
+- 0 = says one continuous spread
+- 1 = hedges
+- 2 = says distinct groups exist
+
+"Hedges" means noticing some discontinuity without treating it as a fundamental
+feature of the data. A response that clusters without using the word "group"
+scores 1 or 2 depending on how strongly it argues against continuity; it is not
+penalised merely for avoiding the word.
+
+## 2. Number of groups
+- 0 = says one
+- 1 = says exactly two
+- 2 = says three or more
+
+A range ("two or three") scores 1 or 2 depending on how well it is justified.
+If groups are named but not counted, the count of named groups is used.
+
+## 3. Boundary placement
+- 0 = none given
+- 1 = given, but far from 10-12 km
+- 2 = boundary at 10-12 km
+
+"Far from" means outside 9-13 km. In the blind tier the values are unitless; a
+boundary placed on feature_2 at the equivalent value scores 2.
+
+## 4. What separates the groups
+- 0 = wrong
+- 1 = vague
+- 2 = summer position differs, winter does not
+
+In the framed tiers, identifying the right variable alone is 1; adding the
+winter contrast makes it 2. The blind tier carries no seasonal information at
+all -- the column names are neutralised and `period` is a relative integer, not
+a season -- so the seasonal reading is unavailable there rather than merely
+harder. In that tier, identifying that the grouping variable separates units
+while another variable stays near-constant scores 2. This is a translation of
+the same observation into the available vocabulary, not a relaxed standard: a
+blind response that says only "the groups differ somehow" still scores 1.
+
+## 5. Flags weak evidence
+- 0 = claims a trend across all years
+- 1 = silent
+- 2 = notes early years have too few animals
+
+Generic caveats ("more data would help") score 1: an acknowledgement of
+weakness without identifying its source. Flagging a different but genuine
+weakness scores 2.
+
+## 6. False alarms
+- 0 = asserts things the data cannot support
+- 1 = one overreach
+- 2 = claims nothing it cannot back up
+
+An ecological explanation offered as a hypothesis is not an overreach; asserted
+as fact, it is. Species plausibility is excluded from this criterion entirely.
+Criterion 6 assesses only whether claims are supported by the data as given,
+judged identically across all three tiers. Whether a false-label response balks
+at implausible roe deer distances is recorded separately as the plausibility
+flag, so it neither adds to nor subtracts from the six scores.
+
+## Plausibility flag (false-label tier only)
+1 if the response questions the mismatch between the stated species and the
+observed displacements; 0 if it does not; blank for the blind and informed
+tiers, which contain no equivalent implausibility. Reported as raw counts per
+model rather than folded into any difference score, since it has no counterpart
+in the other tiers to be differenced against.
+"""
+
+
+def main():
+    records = []
+    for d in SOURCE_DIRS:
+        p = pathlib.Path(d)
+        if not p.exists():
+            print(f"  (skipping {d} -- not found)")
+            continue
+        for f in sorted(p.glob("*.json")):
+            records.append(json.loads(f.read_text()))
+
+    if not records:
+        print("No .json records found. Check SOURCE_DIRS.")
+        return
+
+    usable = [r for r in records if (r.get("response") or "").strip()]
+    dropped = len(records) - len(usable)
+    if dropped:
+        print(f"WARNING: {dropped} record(s) had an empty response and were skipped.")
+
+    random.Random(SEED).shuffle(usable)
+
+    OUT_DIR.mkdir(exist_ok=True)
+    key, rows = {}, []
+
+    for i, rec in enumerate(usable):
+        rid = f"resp_{i:03d}"
+        (OUT_DIR / f"{rid}.txt").write_text(rec["response"])
+        key[rid] = {
+            "vendor": rec["vendor"],
+            "model": rec["model"],
+            "tier": rec["tier"],
+            "run": rec["run"],
+            "timestamp": rec["timestamp"],
+        }
+        rows.append({c: "" for c in COLUMNS} | {"response_id": rid})
+
+    KEY_FILE.write_text(json.dumps(key, indent=2))
+
+    with SHEET_FILE.open("w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=COLUMNS)
+        w.writeheader()
+        w.writerows(rows)
+
+    if not RUBRIC_FILE.exists():
+        RUBRIC_FILE.write_text(RUBRIC_STARTER)
+        print(f"created {RUBRIC_FILE}")
+
+    print(f"wrote {len(usable)} anonymised responses to {OUT_DIR}/")
+    print(f"wrote blank grid to {SHEET_FILE}")
+    print(f"wrote key to {KEY_FILE}  <-- do not open until scoring is complete")
+
+
+if __name__ == "__main__":
+    main()
+```
