@@ -54,6 +54,7 @@
 | Claude Opus 4.8  | Blind       | 2.00 | 1.00 | 0.67 | 2.00 | 2.00 | 1.33 | 9.00      |
 | Claude Opus 4.8  | Informed    | 2.00 | 1.67 | 1.67 | 2.00 | 2.00 | 1.00 | 10.33     |
 | Claude Opus 4.8  | False-label | 2.00 | 1.33 | 1.33 | 1.67 | 2.00 | 0.67 | 9.00      |
+
 Table 1: Scores for each criteria of the rubric are given for each model as a mean of the combined scores across the three tests. A total is given at the end and aligns with [[scores_by_model_tier.png]].
 
 **Counts of Each Flag for Each Model**
@@ -64,6 +65,7 @@ Table 1: Scores for each criteria of the rubric are given for each model as a me
 | Gemini 3.1 Pro   | 1               | 3            |
 | Claude Sonnet 5  | 0               | 7            |
 | Claude Opus 4.8  | 0               | 10           |
+
 Table 2: Standard sum of the scores for each aforementioned flags. Scores sum to a maximum total of 6 (tier 3 runs only) or 12 (tier 2 or 3 runs considered). The Gemini models showed more affluence in considering the plausibility of the roe deer, while the Claude models showed far more capability when addressing the maximum displacement issues.
 
 **Means of Each Model**
