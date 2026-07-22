@@ -1,4 +1,4 @@
-##### 1. Main Plots and Data Extraction":
+##### 1. Main Plots and Data Extraction:
 ```python
 """
 Anchors each elk to its winter range: the median position it occupies

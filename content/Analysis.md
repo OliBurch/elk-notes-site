@@ -20,41 +20,62 @@
 - Tier 2: Informed data. Does providing information about the species, location and migration itself improve the result. This will depend on whether the information is actually being read by the AI or if it is simply using the data to search its own memory for results about the system.
 - Tier 3: False labelling. The AI will be fed the same information as tier 2 but with the incorrect labels. This will create a distinguishing factor between the AI using its own memory and actually using the information in front of it. If its answer is driven by patterns similar to the false labels then it is using its own memory.
 ##### 4. Rubric:
-- The test will follow as listed: Firstly, a rubric of six criterion is established. Next, each response from each LLM is given a score of zero to two for each criterion (i.e max score of twelve for any LLM). Finally, the numerical calculation $$ \Delta_{informed} = S_{Tier 2} - S_{Tier 1}$$ is performed to create a headline number for how much 'muscle' memory the AI relies on versus the quality of the result. 
-- The first three criteria test the substance of each response. Could the LLM successfully identify the structure? The forth catches the muscle memory. Does the answer refer to the data at all? The fifth and sixth defend the answer. Does the AI respond in such a way that it appears it has invented some structure to the answer? Has it overstepped the data?
-  - Criterion 1: Does the AI state the non-continuum that we found in sections 1 and 2.
-  - Criterion 2: Does the AI identify the gap at 10-13km. Does it identify it correctly and not just as a variation.
-  - Criterion 3: Does the AI interpret the groups? Can it see that the low groups are resident while the high groups travel further from the winter range.
-  - Criterion 4 : Does the AI point to its sources? Does is infer from the data or does it simply assert results generically without claim.
-  - Criterion 5: Does the AI use the relationship between summer and maximum displacement. Does it treat the maximums with the appropriate caution rather than simply listing them as long journeys.
-  - Criterion 6: Does the AI explicitly list structure the data can support? Does it note where speculation lies separate to concrete evidence. 
+- The test will follow as listed: Firstly, a rubric of six criterion is established. Next, each response from each LLM is given a score of zero to two for each criterion (i.e max score of twelve for any LLM). Finally, the numerical calculation $$ \Delta_{informed} = S_{Tier 2} - S_{Tier 1}$$ is performed to create a headline number for how much 'muscle' memory the AI relies on versus the quality of the result. Positive results show that the AI has scored higher on informed data.
+- The first four criteria test the substance of each response. Could the LLM successfully identify the structure? The fifth and sixth defend the answer. Does the AI respond in such a way that it appears it has invented some structure to the answer? Has it overstepped the data?
+  - **Criterion 1 - Detects structure.** Does the response state that the spread is not a continuum, as established in the Week 2 baseline? Structure has to be claimed, not merely implied by listing values. 
+  - **Criterion 2 - Number of groups.** Does it recognise more than the textbook migrant/resident binary? Two is the answer priors supply; three or more requires reading the data. 
+  - **Criterion 3 - Boundary placement.** Does it put the division at the observed gap around 10–12 km, rather than somewhere arbitrary or nowhere at all? 
+  - **Criterion 4 - What separates the groups.** Does it interpret the grouping variable — that low-value individuals stay near the winter range while high-value ones sit far from it in summer, with winter position shared across both? 
+  - **Criterion 5 - Flags weak evidence.** Does it identify where the evidence is thin, rather than treating every apparent pattern as equally supported?
+  - **Criterion 6 - False alarms.** Does it separate what the data supports from what it is speculating about, and refrain from asserting the latter as fact?
+- There are also two flags in the data:
+  - **Flag 1.** Tests the strength of the False tier responses to raise the point that the summer displacement seems far too large for roe deer in Britain. This is tested separately to criterion 5 as it is explicit to the False tier responses.
+  - **Flag 2.**  Records whether the response treats large max_disp_km values that are unsupported by the corresponding summer_disp_km as potentially spurious. Recorded separately rather than inside criterion 6 because it is a specific diagnostic rather than a general overreach, and because it applies equally to the two non-blind tiers. Relevant because a spot-check of six such cases found five to be poor GPS fixes and one a genuine June migration [[suspect_tracks.png]].
+
 ##### 5. Scoring:
-- Four LLMs will be tested for each tier in this stage of the project. We will be using Gemini 2.5 Flash, Gemini 3.1 Pro, Claude Sonnet 5 and Claude Opus 4.8. This ensures we cross-reference between strength of model and between companies (namely Google and Anthropic). Worth noting that the total cost was $2.40 total for Claude models and £0.60 for Gemini models.
+- Four LLMs will be tested for each tier in this stage of the project. We will be using Gemini 2.5 Flash, Gemini 3.1 Pro, Claude Sonnet 5 and Claude Opus 4.8. This ensures we cross-reference between strength of model and between companies (namely Google and Anthropic). Worth noting that the total cost was $2.40 total for Claude models and £0.60 for Gemini models for 3 runs of each tier per model.
 - To clean the data to ensure that the blind version was truly blind we swept the columns of the original data and changed each label to feature 'x' where x is a number between 1 and 6. This can be found in the [[Code Appendix]].
 - The responses were also randomised to ensure that scoring avoided bias. The code for this is also in the [[Code Appendix]]. 
 - An initial analysis of the rubric assumptions can also be found in [[Rubric Notes]]. 
 
-| Model            | Tier        | C1  | C2  | C3  | C4  | C5  | C6  | Total /12 |
-| ---------------- | ----------- | --- | --- | --- | --- | --- | --- | --------- |
-| Gemini 2.5 Flash | Blind       |     |     |     |     |     |     |           |
-| Gemini 2.5 Flash | Informed    |     |     |     |     |     |     |           |
-| Gemini 2.5 Flash | False-label |     |     |     |     |     |     |           |
-| Gemini 3.1 Pro   | Blind       |     |     |     |     |     |     |           |
-| Gemini 3.1 Pro   | Informed    |     |     |     |     |     |     |           |
-| Gemini 3.1 Pro   | False-label |     |     |     |     |     |     |           |
-| Claude Sonnet 5  | Blind       |     |     |     |     |     |     |           |
-| Claude Sonnet 5  | Informed    |     |     |     |     |     |     |           |
-| Claude Sonnet 5  | False-label |     |     |     |     |     |     |           |
-| Claude Opus 4.8  | Blind       |     |     |     |     |     |     |           |
-| Claude Opus 4.8  | Informed    |     |     |     |     |     |     |           |
-| Claude Opus 4.8  | False-label |     |     |     |     |     |     |           |
+**Criteria Rank of Each Model**
 
-| Model            | Blind (T1) | Informed (T2) | Δ (T2 − T1) | False-label (T3) | Notes |
-| ---------------- | ---------- | ------------- | ----------- | ---------------- | ----- |
-| Gemini 2.5 Flash |            |               |             |                  |       |
-| Gemini 3.1 Pro   |            |               |             |                  |       |
-| Claude Sonnet 5  |            |               |             |                  |       |
-| Claude Opus 4.8  |            |               |             |                  |       |
+| Model            | Tier        | C1   | C2   | C3   | C4   | C5   | C6   | Total /12 |
+| ---------------- | ----------- | ---- | ---- | ---- | ---- | ---- | ---- | --------- |
+| Gemini 2.5 Flash | Blind       | 2.00 | 1.00 | 0.00 | 1.33 | 1.67 | 0.67 | 6.67      |
+| Gemini 2.5 Flash | Informed    | 2.00 | 1.00 | 0.00 | 2.00 | 1.33 | 0.67 | 7.00      |
+| Gemini 2.5 Flash | False-label | 2.00 | 1.00 | 0.00 | 2.00 | 1.33 | 0.00 | 6.33      |
+| Gemini 3.1 Pro   | Blind       | 1.67 | 0.67 | 0.67 | 1.67 | 1.33 | 1.00 | 7.00      |
+| Gemini 3.1 Pro   | Informed    | 2.00 | 1.00 | 0.00 | 2.00 | 2.00 | 0.00 | 7.00      |
+| Gemini 3.1 Pro   | False-label | 2.00 | 1.00 | 0.00 | 2.00 | 2.00 | 0.67 | 7.67      |
+| Claude Sonnet 5  | Blind       | 2.00 | 1.00 | 0.33 | 2.00 | 2.00 | 1.33 | 8.67      |
+| Claude Sonnet 5  | Informed    | 2.00 | 1.33 | 0.00 | 2.00 | 2.00 | 0.00 | 7.33      |
+| Claude Sonnet 5  | False-label | 2.00 | 1.00 | 0.67 | 2.00 | 2.00 | 0.67 | 8.33      |
+| Claude Opus 4.8  | Blind       | 2.00 | 1.00 | 0.67 | 2.00 | 2.00 | 1.33 | 9.00      |
+| Claude Opus 4.8  | Informed    | 2.00 | 1.67 | 1.67 | 2.00 | 2.00 | 1.00 | 10.33     |
+| Claude Opus 4.8  | False-label | 2.00 | 1.33 | 1.33 | 1.67 | 2.00 | 0.67 | 9.00      |
+Table 1: Scores for each criteria of the rubric are given for each model as a mean of the combined scores across the three tests. A total is given at the end and aligns with [[scores_by_model_tier.png]].
+
+**Counts of Each Flag for Each Model**
+
+| Model            | Plausibility /6 | Max_disp /12 |
+| ---------------- | --------------- | ------------ |
+| Gemini 2.5 Flash | 2               | 3            |
+| Gemini 3.1 Pro   | 1               | 3            |
+| Claude Sonnet 5  | 0               | 7            |
+| Claude Opus 4.8  | 0               | 10           |
+Table 2: Standard sum of the scores for each aforementioned flags. Scores sum to a maximum total of 6 (tier 3 runs only) or 12 (tier 2 or 3 runs considered). The Gemini models showed more affluence in considering the plausibility of the roe deer, while the Claude models showed far more capability when addressing the maximum displacement issues.
+
+**Means of Each Model**
+
+| Model            | Blind (T1)  | Informed (T2) | False-label (T3) | Δ (T2 − T1)  | Δ / error |
+| ---------------- | ----------- | ------------- | ---------------- | ------------ | --------- |
+| Gemini 2.5 Flash | 6.67 ± 1.53 | 7.00 ± 1.00   | 6.33 ± 0.58      | +0.33 ± 1.05 | +0.32     |
+| Gemini 3.1 Pro   | 7.00 ± 1.00 | 7.00 ± 0.00   | 7.67 ± 0.58      | +0.00 ± 0.58 | 0.00      |
+| Claude Sonnet 5  | 8.67 ± 0.58 | 7.33 ± 0.58   | 8.33 ± 1.15      | −1.33 ± 0.47 | −2.83     |
+| Claude Opus 4.8  | 9.00 ± 1.00 | 10.33 ± 1.15  | 9.00 ± 2.00      | +1.33 ± 0.88 | +1.51     |
+
+Table 3: Means and standard deviation for each parameter are given. Headline number is calculated and error is given in its own column. The Claude models are clearly the most affected with Sonnet even scoring worse with informed data. With a test of n=3, the result is somewhat uninformative.
 
 ##### 6. Current Limitations:
 - Claude does not allow sampling parameters to be set on the models chosen. Gemini uses default parameters for symmetry but this may not be the same as Claude's default.
