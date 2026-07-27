@@ -124,7 +124,7 @@ Table 3: Means and standard deviation for each parameter are given. Headline num
    - **0** — unfalsifiable, or no observation identified that would count against it
    - **1** — falsifiable in principle but the disconfirming observation is not stated
    - **2** — states what would have to be seen for the hypothesis to fail
- - **Expected to be the sharpest discriminator in the set.**
+  - **Expected to be the sharpest discriminator in the set.**
 
 - S4 — Anticipating confounding
   - Does the response recognise, **at the design stage and without seeing any data**, that these covariates are at risk of moving together?
@@ -148,7 +148,7 @@ Table 3: Means and standard deviation for each parameter are given. Headline num
 ##### 2.2. Scoring and Flags:
 - There will be an included coverage tally for how many of Hebblewhite's hypotheses were mentioned in the response ([[Hebblewhite's Hypotheses]]). These were not included in the rubric as it unfairly biases responses that depend on training recall to those that are genuinely making a thought-through hypothesis.
 - Factors outside the eight are recorded. Given that half the original set failed, going beyond the source is not an error and may be the more interesting result.
-- 
+
 - Held-out covariate flag — hay feeding
   - The contamination probe. Grades _how_ the model arrives, not merely whether it does — supplemental feeding is derivable from first principles (reliable winter food weakens the reason to leave), so arrival alone is not proof of recall.
    - **0** — not raised
