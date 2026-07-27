@@ -94,10 +94,10 @@ Table 3: Means and standard deviation for each parameter are given. Headline num
 - Claude Opus 4.8 was also used in a completely separate chat to weigh the scoring against. While this provides no cross-over concern, it raises concern towards some bias in answering with the caveat that I provided all the initial marking.
 ## TEST 2: Can the AI Reproduce Known Methods from the Field
 ##### 1. Assessing the Literature:
-- This test involves Hebblewhite's 2006 paper on tracking the declining migration of elk. Notes on this can be found in [[Notes on Hebblewhite 2007 Paper - and Continuation of Project Research Objective]]. 
-- This paper outlines eight hypotheses necessary for the decline. It aims to assess these with a strict method for each. It then ran statistical models of population growth rate against these and ranked them to see which variables mattered.
+- This paper outlines eight hypotheses necessary for the decline (found in [[Hebblewhite's Hypotheses]]). It aims to assess these with a strict method for each. It then ran statistical models of population growth rate against these and ranked them to see which variables mattered.
 - The end result was Winter range enhancement, hay feeding, and the wolf-protection gradient were consistent with observations, with elk relocation not ruled out. Harvest, prescribed burning, horse numbers, and the predation-refuge-through-migration idea all ran opposite to prediction.
 - As such, the proposed test is to assess the extent that each LLM can reproduce the correct methods for the study while ruling out those that produce prose shaped like methodology. A result which says 'I would collect longitudinal data and perform appropriate statistical tests' sounds like a method but in reality says nothing at all and would be ranked poorly as such.
+ - A small caveat is that H7 and H8 share one data. It is unlikely from name alone that an LLM will separate these responses so as such they will be scored together.
 ##### 2. Designing the Rubric:
 - The rubric must assess the validity of a strong response that identifies a mechanism and predicts an direction (migration up or down) against a weak response that doesn't.
 - It must test:
@@ -105,6 +105,68 @@ Table 3: Means and standard deviation for each parameter are given. Headline num
   - Direction predictions on an outcome (such as Hebblewhite's population size and M:R ratio).
   - Whether said prediction could be the opposite (else no hypothesis has actually been created, it is rather just an observation of the system).
 - The test is designed so that an answer with measurable content but no structure is clearly reciting from memory, while one that frames the content with a hypothesis is unlikely to be. 
+##### 2.1. Structure axis:
+ - S1 — Mechanism named
+  - Does the response say _how_ the factor changes an individual elk's incentive to migrate, or does it only name the variable?
+   - **0** — variable named only. "Wolf numbers are relevant."
+   - **1** — mechanism gestured at but not specific to the migration decision. "Wolves affect elk populations."
+   - **2** — mechanism connects the factor to the migrate-or-stay trade-off. "Wolf recolonisation raises predation risk on summer range, eroding the safety advantage that made migration worthwhile."
+
+- S2 — Directional prediction
+  - Does the response commit to which way something should move if the hypothesis is true?
+  - The source paper commits on **two independent outcomes**: the migrant-to-resident ratio, and population size. That is precisely what let it grade partial matches - a factor consistent with population change but not with the ratio was judged to affect migrants and residents equally.
+   - **0** — no direction stated
+   - **1** — direction on one outcome
+   - **2** — direction on two independent outcomes
+
+-  S3 — Falsifiability
+  - Could an observation kill the hypothesis? If the proposal is compatible with any result, it is not a hypothesis.
+   - **0** — unfalsifiable, or no observation identified that would count against it
+   - **1** — falsifiable in principle but the disconfirming observation is not stated
+   - **2** — states what would have to be seen for the hypothesis to fail
+ - **Expected to be the sharpest discriminator in the set.**
+
+- S4 — Anticipating confounding
+  - Does the response recognise, **at the design stage and without seeing any data**, that these covariates are at risk of moving together?
+  - Credit the _design_ claim: one population, one time series, no replication, no control, therefore covariates measured over the same three decades cannot be cleanly separated. That requires no knowledge of the actual trends.
+  - Do **not** credit here - and penalise under S6 - any factual assertion about what the data show ("wolf numbers rose while burn area rose"). That is memory or guesswork, not design reasoning.
+   - **0** — treats each covariate as independently testable, no acknowledgement
+   - **1** — notes confounding generically without consequence for the design
+   - **2** — names the problem and adapts the method (model selection, lag structure, alternative designs, or an explicit statement that the time series alone cannot separate the candidates)
+
+- S5 — Operational definition
+  - Is the outcome defined well enough to measure? "Migration declined" is a statement; "proportion of collared animals with non-overlapping seasonal ranges" is a measurement.
+  - **0** — outcome left undefined
+  - **1** — defined loosely
+  - **2** — defined in terms that could be computed from the stated datasets
+  
+- S6 — Overreach
+  - Mirror of Study 1's C6. Asserting what the data will show, stating causation as established, inventing findings, or asserting trends it cannot know.
+  - **0** — multiple instances
+  - **1** — one instance
+  - **2** — none
+##### 2.2. Scoring and Flags:
+- There will be an included coverage tally for how many of Hebblewhite's hypotheses were mentioned in the response ([[Hebblewhite's Hypotheses]]). These were not included in the rubric as it unfairly biases responses that depend on training recall to those that are genuinely making a thought-through hypothesis.
+- Factors outside the eight are recorded. Given that half the original set failed, going beyond the source is not an error and may be the more interesting result.
+- 
+- Held-out covariate flag — hay feeding
+  - The contamination probe. Grades _how_ the model arrives, not merely whether it does — supplemental feeding is derivable from first principles (reliable winter food weakens the reason to leave), so arrival alone is not proof of recall.
+   - **0** — not raised
+   - **1** — raised generically. "Consider whether any supplemental feeding occurs."
+   - **2** — raised with site-specific detail: horses, the ranch, hay in late winter, specific counts or dates
+
+- Verbatim recall flag
+  - Independent of the above. Does the response, unprompted:
+   - name Ya Ha Tinda or Banff
+   - cite Hebblewhite or any specific paper
+   - quote figures from the source (the fourfold ratio decline, 1,273 relocated elk, wolf counts)
+  - Recorded as a simple yes/no per category.
+
+- Dataset selection — precision and recall
+  - Once a response states which datasets it would use:
+   - **Precision** — fraction of chosen datasets that are real covariates
+   - **Recall** — fraction of real covariates chosen
+  - A model that says "I'd use all 29 datasets" has perfect recall and terrible precision. A model that picks only wolf data has perfect precision and dreadful recall. Neither is doing the job; the job is both at once. This measures discrimination directly, which Study 1 had no way to do.
 ##### 3. Creating the Tiers:
 - Please see [[Data For Each Tier]] for each title to be provided to the AI.
 
@@ -113,8 +175,11 @@ Table 3: Means and standard deviation for each parameter are given. Headline num
 | T1 — clean           | 11   | 0      | 11    | 100%            |
 | T2 — diluted         | 11   | 6      | 17    | 65%             |
 | T3 — heavily diluted | 11   | 18     | 29    | 38%             |
+Table 4: A brief overview of the tiering system for the reproducibility test. Tiers are made independent of one another by adding a set number of decoys into the test.
+
 - T1 will have no data accept that of which Hebblewhite used. Answers of this tier should provide the cleanest responses in terms of content, but may overstate specifics having recognised the test from their training.
 - T2 will be provided with six decoy data while T3 will be provided with 18 decoy data. This helps separate poor answers using anything given to them from strong answers which can differentiate between useful and un-useful information.
 - **ALL** tiers will have Hebblewhite's hay feeding data cut. If a response asserts this result from memory it'll be clear it is using its training data to answer rather than actually generating a proposed methodology. 
 ##### 4. Limitations:
 - Group B skews heavily to **invertebrates and non-mammals**. A sharp model might spot that the inventory contains no terrestrial mammal decoys and infer the omission is deliberate. Group A skews to **administrative and infrastructural records**. Same risk. Both are unavoidable: those are the two categories where the causal path to a large herbivore's movement decision reliably fails. Accepting the tell is better than diluting the list with terrestrial entries that leak.
+- **S5 Flagged as a likely dead column.** Models produce definitions on request very readily; this may land at 2.00 across the board and discriminate nothing, as C1 did in Study 1.
