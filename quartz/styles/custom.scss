@@ -12,3 +12,12 @@
       "grid-sidebar-left grid-footer" !important;
   }
 }
+
+:root {
+  --pageWidth: 1000px;
+}
+
+.center {
+  width: 1000px;
+  max-width: 100%;
+}
