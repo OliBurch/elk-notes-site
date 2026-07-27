@@ -1,4 +1,4 @@
-## Week 2: Is the AI reading the data or is it using "muscle memory"
+## TEST 1: Is the AI reading the data or is it using "muscle memory"
 ##### 1. Counting Data:
 - From the 175 elk, there are a total 1,585,456 entries ([[2001-2020 - Notes and Ideas]]). Of these elk, only 113 are relevant to the study due to the necessity of covering the winter and summer ranges of the data. Therefore, there are a total 234 elk years (an elk that is only tracked for 90 days of a year for example would still be considered as contributing 1 elk year) in the study.
 - The choice of only elk whose collars lasted the full ranges could inflate the resident majority in the data if the migrants were more likely to not last this full range. It is not likely that this will vary the result though as the test is to simply see if the AI is reading the data, not to produce a complete theory of elk migration.
@@ -91,3 +91,30 @@ Table 3: Means and standard deviation for each parameter are given. Headline num
 - Model versions are moving targets. Gemini 3.1 Pro Preview is a preview identifier subject to renaming and behavioural change, so results are tied to the collection date rather than to a stable model.
 - Hit three distinct Gemini failure modes in one morning: permanent quota restriction, empty responses, and server overload. The first two come hand in hand while the last is an issue on Google's behalf. Simple fixes (max tokens from 16000->32000 and waited 15 minutes then tried again on Google's side) but limitations nonetheless.
 - In regard to billing, Opus blind runs ran more expensive than framed runs due to reasoning token billing.
+- Claude Opus 4.8 was also used in a completely separate chat to weigh the scoring against. While this provides no cross-over concern, it raises concern towards some bias in answering with the caveat that I provided all the initial marking.
+## TEST 2: Can the AI Reproduce Known Methods from the Field
+##### 1. Assessing the Literature:
+- This test involves Hebblewhite's 2006 paper on tracking the declining migration of elk. Notes on this can be found in [[Notes on Hebblewhite 2007 Paper - and Continuation of Project Research Objective]]. 
+- This paper outlines eight hypotheses necessary for the decline. It aims to assess these with a strict method for each. It then ran statistical models of population growth rate against these and ranked them to see which variables mattered.
+- The end result was Winter range enhancement, hay feeding, and the wolf-protection gradient were consistent with observations, with elk relocation not ruled out. Harvest, prescribed burning, horse numbers, and the predation-refuge-through-migration idea all ran opposite to prediction.
+- As such, the proposed test is to assess the extent that each LLM can reproduce the correct methods for the study while ruling out those that produce prose shaped like methodology. A result which says 'I would collect longitudinal data and perform appropriate statistical tests' sounds like a method but in reality says nothing at all and would be ranked poorly as such.
+##### 2. Designing the Rubric:
+- The rubric must assess the validity of a strong response that identifies a mechanism and predicts an direction (migration up or down) against a weak response that doesn't.
+- It must test:
+  - Named mechanisms vs variables ("wolves eat elk, so migrants trade forage for safety" vs "wolves are relevant").
+  - Direction predictions on an outcome (such as Hebblewhite's population size and M:R ratio).
+  - Whether said prediction could be the opposite (else no hypothesis has actually been created, it is rather just an observation of the system).
+- The test is designed so that an answer with measurable content but no structure is clearly reciting from memory, while one that frames the content with a hypothesis is unlikely to be. 
+##### 3. Creating the Tiers:
+- Please see [[Data For Each Tier]] for each title to be provided to the AI.
+
+| Tier                 | Real | Decoys | Total | Signal fraction |
+| -------------------- | ---- | ------ | ----- | --------------- |
+| T1 — clean           | 11   | 0      | 11    | 100%            |
+| T2 — diluted         | 11   | 6      | 17    | 65%             |
+| T3 — heavily diluted | 11   | 18     | 29    | 38%             |
+- T1 will have no data accept that of which Hebblewhite used. Answers of this tier should provide the cleanest responses in terms of content, but may overstate specifics having recognised the test from their training.
+- T2 will be provided with six decoy data while T3 will be provided with 18 decoy data. This helps separate poor answers using anything given to them from strong answers which can differentiate between useful and un-useful information.
+- **ALL** tiers will have Hebblewhite's hay feeding data cut. If a response asserts this result from memory it'll be clear it is using its training data to answer rather than actually generating a proposed methodology. 
+##### 4. Limitations:
+- Group B skews heavily to **invertebrates and non-mammals**. A sharp model might spot that the inventory contains no terrestrial mammal decoys and infer the omission is deliberate. Group A skews to **administrative and infrastructural records**. Same risk. Both are unavoidable: those are the two categories where the causal path to a large herbivore's movement decision reliably fails. Accepting the tell is better than diluting the list with terrestrial entries that leak.
