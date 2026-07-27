@@ -120,7 +120,7 @@ Table 3: Means and standard deviation for each parameter are given. Headline num
    - **2** — direction on two independent outcomes
 
 -  S3 — Falsifiability
-  - Could an observation kill the hypothesis? If the proposal is compatible with any result, it is not a hypothesis.
+  -  Could an observation kill the hypothesis? If the proposal is compatible with any result, it is not a hypothesis.
    - **0** — unfalsifiable, or no observation identified that would count against it
    - **1** — falsifiable in principle but the disconfirming observation is not stated
    - **2** — states what would have to be seen for the hypothesis to fail
@@ -175,6 +175,7 @@ Table 3: Means and standard deviation for each parameter are given. Headline num
 | T1 — clean           | 11   | 0      | 11    | 100%            |
 | T2 — diluted         | 11   | 6      | 17    | 65%             |
 | T3 — heavily diluted | 11   | 18     | 29    | 38%             |
+
 Table 4: A brief overview of the tiering system for the reproducibility test. Tiers are made independent of one another by adding a set number of decoys into the test.
 
 - T1 will have no data accept that of which Hebblewhite used. Answers of this tier should provide the cleanest responses in terms of content, but may overstate specifics having recognised the test from their training.
